@@ -13,10 +13,10 @@
 # running blktrace & fio.
 
 #sudo # to access fio/device/blktrace
-./trace-fiocombs.sh                             \
-    --title test                                \
+$(dirname ${0})/trace-fiocombs.sh               \
+    ${1} --title test                           \
     --file /dev/nvme0n1                         \
-    --rw randrw                                 \
+    --rw 50                                     \
     --bs 4k/100 64k/100 4k/70:64k/30            \
     --qd 1 32 128                               \
     --njobs 1 4                                 \

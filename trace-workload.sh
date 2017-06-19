@@ -15,34 +15,30 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# single_test_script=~/fio_presets/do_test_normalWorkload.sh;
-# dev=/dev/nvme0n1
-# kernel=$(uname -r | sed 's/\([0-9]\.[0-9]\+\).\+/\1/g');
-# trace_arg="-a queue -a drv_data -a complete"
-# testname="${kernel}_${1}_test${i}";
+## single_test_script=~/fio_presets/do_test_normalWorkload.sh;
+## dev=/dev/nvme0n1
+## kernel=$(uname -r | sed 's/\([0-9]\.[0-9]\+\).\+/\1/g');
+## trace_arg="-a queue -a drv_data -a complete"
+## testname="${kernel}_${1}_test${i}";
 
-# mkdir -p ./${TITLE}; cd ./${TITLE};
-echo "mkdir -p ./${TITLE}; cd ./${TITLE};"
+mkdir -p ./${TITLE}; cd ./${TITLE};
 
 ### start trace
-echo "starting blktrace/fio..."
-#sleep 3; blktrace ${BTARG} ${DEV} & PID_BLKTRACE=$!;
-echo "sleep 3; blktrace ${BTARG} ${DEV} & PID_BLKTRACE=$!;"
+echo "@@@starting blktrace/fio..."
+
+sleep 3; blktrace ${BTARG} ${DEV} & PID_BLKTRACE=$!;
 
 # log cpu load
-#while true; do echo $(date -Ins) $(cat /proc/stat | egrep "(cpu |ctx)"); sleep 0.25; done > cpuload.log & PID_CPULOGGER=$!;
-echo 'while true; do echo $(date -Ins) $(cat /proc/stat | egrep "(cpu |ctx)"); sleep 0.25; done > cpuload.log & PID_CPULOGGER=$!;'
+while true; do echo $(date -Ins) $(cat /proc/stat | egrep "(cpu |ctx)"); sleep 0.25; done > cpuload.log & PID_CPULOGGER=$!;
 
 # run fio test
-#${WORKLOADCMD} > fio_result.json; kill ${PID_CPULOGGER}; sync;
-echo "${WORKLOADCMD} > fio_result.json; kill ${PID_CPULOGGER}; sync;"
-${WORKLOADCMD};
+${WORKLOADCMD} > fio_result.json; kill ${PID_CPULOGGER}; sync;
 
 # stop trace
-#sleep 3; kill ${PID_BLKTRACE}; sync;
-echo "sleep 3; kill ${PID_BLKTRACE}; sync;"
-echo "blktrace/fio done";
+sleep 3; kill ${PID_BLKTRACE};
+wait ${PID_BLKTRACE}; sync;
+
+echo "@@@blktrace/fio done";
 ### end of trace
-#cd ..;
-echo "cd ..;"
+cd ..;
 

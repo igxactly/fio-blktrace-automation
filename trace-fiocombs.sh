@@ -36,11 +36,12 @@ optional.add_argument('--do', default=False, action='store_true', help='no actio
 #optional.add_argument('--format', default='json', help='')
 
 ## NOT IMPLEMENTED YET
+#optional.add_argument('--rand', default='rand', help=' to use')
 #optional.add_argument('--order', default='toggle', help='toggle: a-z then z-a')
 EOF
 
 # echo ${BTARG}
-scriptdir=$(dirname $0)
+scriptdir=$(dirname $(readlink -f $0))
 format=json
 
 for repeat in $(seq ${REPEAT});
@@ -70,8 +71,8 @@ do
         echo "########################";
         echo "## START ${title_full}"
         echo "------------------------";
-        cmd="'${scriptdir}/run-fio.sh ${title_full} ${rw} ${bs} ${qd} ${njobs} ${time} ${file_full} ${ioengine} ${direct} ${format}'";
-        bash -c "${scriptdir}/trace-workload.sh ${cmd} ${file_full} ${btarg} ${title_full}";
+        cmd="'${scriptdir}/run-fio.sh ${title_full} ${rw} ${bs_full} ${qd} ${njobs} ${time} ${file_full} ${ioengine} ${direct} ${format}'";
+        bash -c "${scriptdir}/trace-workload.sh ${cmd} ${file_full} ${btarg} ${title_full}" && \
         bash -c "${scriptdir}/collect-data.sh ${file_full} ${btarg} ${title_full}";
         echo "------------------------";
         echo "# END ${title_full}#"
@@ -81,3 +82,4 @@ done;
 done;
 done;
 done;
+

@@ -4,6 +4,7 @@ source $(dirname $0)/lib/argparse.bash || exit 1
 argparse "$@" <<EOF || exit 1
 
 parser.add_argument('title')
+#parser.add_argument('rand')
 parser.add_argument('rw')
 parser.add_argument('bs')
 parser.add_argument('qd')
@@ -32,6 +33,6 @@ rwmixwrite=${RW}
 
 [${TITLE}]
 filename=${FILE}
-" # \ # commented out for testing
-# | sudo fio --output-format=${FORMAT} - ;
+" \
+| sudo fio --output-format=${FORMAT} - ;
 
